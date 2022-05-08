@@ -1,0 +1,3 @@
+- ignore: {name: "Use head"}
+- ignore: {name: "Use minimum"}
+- ignore: {name: "Evaluate"}

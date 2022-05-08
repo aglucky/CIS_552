@@ -1,0 +1,19 @@
+cabal-version:       >=1.10
+name:                cis552-classes
+version:             0.1.0.0
+synopsis:            Class materials from CIS 552, UPenn
+description:         Type classes
+license-file:        LICENSE
+maintainer:          sweirich@cis.upenn.edu
+build-type:          Simple
+extra-source-files:  CHANGELOG.md
+
+library
+  exposed-modules:     Classes
+                     , IOExercise
+                     , MonoidFoldable
+  -- other-modules:
+  default-extensions:  MultiParamTypeClasses, FlexibleInstances, InstanceSigs, ScopedTypeVariables, NoStarIsType
+  build-depends:       base >= 4.14, HUnit >= 1.6, filepath >= 1.4
+  default-language:    Haskell2010
+  ghc-options:         -Wno-type-defaults -Wincomplete-patterns
