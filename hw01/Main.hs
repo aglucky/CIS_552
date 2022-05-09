@@ -26,11 +26,8 @@ testStyle = "testStyle" ~:
 
 -- Part One
 
-abc x y z =
-  if x then if y then True else
-       if (x && z) then True else False
-  else False
- 
+abc :: Bool -> Bool -> Bool -> Bool
+abc x y z = (x && y) || (x && z)
 
 tabc :: Test
 tabc = "abc" ~: TestList [abc True False True  ~?= True,
@@ -40,18 +37,7 @@ tabc = "abc" ~: TestList [abc True False True  ~?= True,
 -- Part Two
 
 arithmetic :: ((Int, Int), Int) -> ((Int,Int), Int) -> (Int, Int, Int)
-arithmetic x1 x2 =
-     let a = fst (fst x1) in
-     let b = snd (fst x1) in
-     let c = snd x1 in
-     let d = fst (fst x2) in
-     let e = snd (fst x2) in
-     let f = snd x2
-       in
-       ((((((b*f) - (c*e)), ((c*
-       d) - (a*f)
-       ), ((a*e)-(b*d))))))
- 
+arithmetic ((a, b), c) ((d, e), f) = (b*f -c*e, c*d - a*f, a*e - b*d)
 
 tarithmetic :: Test
 tarithmetic = "arithmetic" ~:
@@ -59,12 +45,12 @@ tarithmetic = "arithmetic" ~:
              arithmetic ((3,2),1) ((4,5),6) ~?= (7,-14,7) ]
 
 -- Part Three
-
-reverse l  = reverse_aux l [] where
-  reverse_aux l acc =
-    if null l then acc
-       else reverse_aux (tail l) (head l : acc)
- 
+reverse :: [a] -> [a]
+reverse [] = []
+reverse l =  rev l []
+  where
+    rev [] a = a
+    rev (x:xs) a = rev xs (x:a)
 
 treverse :: Test
 treverse = "reverse" ~: TestList [reverse [3,2,1] ~?= [1,2,3],
@@ -72,10 +58,9 @@ treverse = "reverse" ~: TestList [reverse [3,2,1] ~?= [1,2,3],
 
 -- Part Four
 
-zip xs ys = g 0 xs ys where
-  g n xs ys = if n == length xs || n == length ys then [] else
-          (xs !! n, ys !! n) : g (n + 1) xs ys
-
+zip :: [a] -> [b] -> [(a,b)]
+zip (x:xs) (y:ys) = (x,y) : zip xs ys
+zip _ _ = []
 tzip :: Test
 tzip = "zip" ~:
   TestList [ zip "abc" [True,False,True] ~?= [('a',True),('b',False), ('c', True)],
@@ -98,12 +83,14 @@ testLists = "testLists" ~: TestList
 --
 -- >>> "Hello" `startsWith` "Wello Horld!"
 -- False
- 
-startsWith = undefined
+
+startsWith :: String -> String -> Bool
+startsWith [] _ = True
+startsWith _ [] = False
+startsWith (x:xs) (y:ys) = x == y && startsWith xs ys
 
 tstartsWith :: Test
 tstartsWith = "startsWith" ~: (assertFailure "testcase for startsWith" :: Assertion)
- 
 
 -- Part Two
 
@@ -117,11 +104,12 @@ tstartsWith = "startsWith" ~: (assertFailure "testcase for startsWith" :: Assert
 -- >>> "World" `endsWith` "Hello World!"
 -- False
 
-endsWith = undefined
+endsWith :: [a] -> [a] -> Bool
+endsWith = undefined -- TODO
 
 tendsWith :: Test
 tendsWith = "endsWith" ~: (assertFailure "testcase for endsWith" :: Assertion)
- 
+
 
 -- Part Three
 
