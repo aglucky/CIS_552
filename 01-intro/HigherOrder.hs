@@ -642,10 +642,10 @@ a list of `b` values.  We can now safely reuse the pattern, by
 -}
 
 toUpperString' :: String -> String
-toUpperString' xs = map toUpper xs
+toUpperString' = map toUpper
 
 shiftPoly' :: XY -> Polygon -> Polygon
-shiftPoly' d = undefined
+shiftPoly' d = map (shiftXY d)
 
 {-
 Much better.  But let's make sure our refactoring didn't break anything!
@@ -691,7 +691,7 @@ We can write this more cleanly with map, of course:
 -}
 
 listIncr' :: [Int] -> [Int]
-listIncr' = undefined
+listIncr' = map (\x -> x + 1)
 
 {-
 Computation Pattern: Folding
@@ -769,7 +769,7 @@ from our list-length function?
 -}
 
 len' :: [a] -> Int
-len' = undefined
+len' = foldr (\x y -> 1 + y) 0
 
 {-
 Once you have defined `len` in this way, see if you can trace how it
@@ -790,7 +790,7 @@ factorial 0 = 1
 factorial n = n * factorial (n -1)
 
 factorial' :: Int -> Int
-factorial' n = undefined
+factorial' n = foldr (*) 1 [1..n]
 
 {-
 OK, one more.  The standard list library function `filter` has this
@@ -815,7 +815,7 @@ testFilter =
 Can we implement filter using foldr?  Sure!
 -}
 
-filter pred = undefined
+filter pred = foldr (\x y -> if pred x then x : y else y) []
 
 runTests :: IO Counts
 runTests = runTestTT $ TestList [testMap, testFoldr, testFilter]
