@@ -42,8 +42,7 @@ Or you can make a list containing the functions
 -}
 
 funs :: [Int -> Int]
-funs = undefined
-
+funs = [plus1, minus1]
 {-
 Taking Functions as Input
 -------------------------
@@ -416,7 +415,7 @@ following test passes.
 -}
 
 singleton :: a -> [a]
-singleton = undefined
+singleton = (: [])
 
 singletonTest :: Test
 singletonTest = singleton True ~?= [True]
@@ -482,7 +481,7 @@ ex1 x y = doTwice doTwice x y
 -}
 
 ex1Test :: Test
-ex1Test = undefined
+ex1Test = ex1 (+ 1) 0 ~?= 4
 
 {-
 Polymorphic Data Structures
