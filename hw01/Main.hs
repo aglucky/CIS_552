@@ -84,7 +84,7 @@ testLists = "testLists" ~: TestList
 -- >>> "Hello" `startsWith` "Wello Horld!"
 -- False
 
-startsWith :: String -> String -> Bool
+startsWith :: Eq a => [a] -> [a] -> Bool
 startsWith [] _ = True
 startsWith _ [] = False
 startsWith (x:xs) (y:ys) = x == y && startsWith xs ys
@@ -104,8 +104,8 @@ tstartsWith = "startsWith" ~: (assertFailure "testcase for startsWith" :: Assert
 -- >>> "World" `endsWith` "Hello World!"
 -- False
 
-endsWith :: [a] -> [a] -> Bool
-endsWith = undefined -- TODO
+endsWith :: Eq a => [a] -> [a] -> Bool
+endsWith xs ys = startsWith (reverse xs) (reverse ys)
 
 tendsWith :: Test
 tendsWith = "endsWith" ~: (assertFailure "testcase for endsWith" :: Assertion)
@@ -121,7 +121,12 @@ tendsWith = "endsWith" ~: (assertFailure "testcase for endsWith" :: Assertion)
 -- NOTE: do not use any functions from the Prelude or Data.List for
 -- this problem, even for use as a helper function.
 
-concat = undefined
+helper :: [a] -> [a] -> [a]
+helper [] ys = ys
+helper (x:xs) ys = x:xs `helper` ys
+
+concat :: [[a]] -> [a]
+concat = foldr (helper) []
 
 tconcat :: Test
 tconcat = "concat" ~: (assertFailure "testcase for concat" :: Assertion)
@@ -139,11 +144,23 @@ tconcat = "concat" ~: (assertFailure "testcase for concat" :: Assertion)
 -- [[1,3],[2,4]]
 -- >>> transpose ([[]] :: [[Integer]])
 -- []
- 
+
 -- transpose is defined in Data.List
 -- (WARNING: this one is tricky!)
- 
-transpose = undefined
+
+transpose :: [[a]] -> [[a]]
+transpose list
+  | any null list = []
+  | otherwise =
+      foldr buildRow [] list : transpose (foldr deleteRow [] list)
+  where
+    buildRow cols row = take 1 cols `helper` row
+    deleteRow row rows = drop 1 row : rows
+
+transpose' :: [[a]] -> [[a]]
+transpose' l
+  | any null l = []
+  | otherwise  = map head l : transpose' (map tail l)
 
 ttranspose :: Test
 ttranspose = "transpose" ~: (assertFailure "testcase for transpose" :: Assertion)
@@ -156,7 +173,9 @@ ttranspose = "transpose" ~: (assertFailure "testcase for transpose" :: Assertion
 -- >>> countSub "aa" "aaa"
 -- 2
 
+countSub :: Eq a => [a] -> [a] -> Int
 countSub = undefined
+
 tcountSub :: Test
 tcountSub = "countSub" ~: (assertFailure "testcase for countSub" :: Assertion)
 
