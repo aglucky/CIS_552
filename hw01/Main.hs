@@ -5,10 +5,12 @@
 module Main where
 import Prelude hiding (reverse, concat, zip, (++))
 import Test.HUnit
+import Data.List (minimumBy)  
 import qualified Data.List as List
 import qualified Data.Char as Char
 import qualified Data.Maybe as Maybe
 import qualified Text.Read as Read
+import Data.Ord (comparing)
 
 main :: IO ()
 main = do
@@ -174,18 +176,34 @@ ttranspose = "transpose" ~: (assertFailure "testcase for transpose" :: Assertion
 -- 2
 
 countSub :: Eq a => [a] -> [a] -> Int
-countSub = undefined
+countSub = error
 
 tcountSub :: Test
 tcountSub = "countSub" ~: (assertFailure "testcase for countSub" :: Assertion)
-
 --------------------------------------------------------------------------------
 
 -- Part One: Weather
 
 weather :: String -> String
-weather str = error "unimplemented"
- 
+weather str = show $ (\(a, _, _) -> a) $ auxHelp str
+
+auxHelp :: String -> (Int, Int, Int)
+auxHelp str = minimumBy (comparing (\(_, a, b) -> a+b)) $ map quickConvert $ getWeatherList str
+
+getWeatherList :: String -> [[Maybe Int]]
+getWeatherList str = filter isValid (map (parseLine . words) (lines str))
+
+parseLine :: [String] -> [Maybe Int]
+parseLine [a, b, c, es] = [readInt a, readInt b, readInt c]
+parseLine _ = []
+
+isValid :: [Maybe Int] -> Bool
+isValid [Just a, Just b, Just c] = True
+isValid _ = False
+
+quickConvert :: [Maybe Int] -> (Int, Int, Int)
+quickConvert [Just a, Just b, Just c] = (a, b, c)
+quickConvert _ = (-90, 0, 0)
 
 weatherProgram :: IO ()
 weatherProgram = do
