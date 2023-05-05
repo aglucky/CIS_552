@@ -1,0 +1,16 @@
+{
+  "editor.formatOnSave": true,
+  "haskell.hlint.logLevel": "warn",
+  "haskell.hlint.run": "onSave",
+  "haskell.formattingProvider": "ormolu",
+  "haskell.toolchain": {
+    "hls": "1.7.0.0",
+    "ghc": null,
+    "cabal": null,
+    "stack": null
+  },
+  "haskell.serverEnvironment": {
+    "PATH": "${HOME}/.ghcup/bin:$PATH"
+  },
+  "haskell.hlint.executablePath": "/Users/adamgluck/.cabal/bin/hlint",
+}
